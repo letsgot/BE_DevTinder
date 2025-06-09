@@ -2,6 +2,7 @@ const express = require("express");
 const { User } = require("../Model/user");
 const { authentication } = require("../middleware/auth");
 const { Connection } = require("../Model/connection");
+const { sendEmailsInBatches } = require("../utils/emailService");
 
 const connectionRequestRouter = express.Router();
 
@@ -40,7 +41,18 @@ connectionRequestRouter.post('/send/:status/:receiverId', authentication, async 
             senderId
         });
 
+        let receiverUser = await User.findById(receiverId);
+
+        if (!receiverUser.email) {
+            res.status(404).json({
+                status: 404,
+                message: "Receiver User not found"
+            })
+        }
+
         await newConnection.save();
+
+        sendEmailsInBatches([receiverUser.email], "Got the new connection request", "Hello");
 
         res.status(200).json({
             message: `${status} saved successfully`,

@@ -7,7 +7,7 @@ const { authRouter } = require("./routes/auth");
 const { profileRouter } = require("./routes/profile");
 const { connectionRequestRouter } = require('./routes/connectionRequest');
 const { userRouter } = require('./routes/user');
-
+require('dotenv').config();
 
 // express.json() parses the incoming JSON payload and converts it into a JavaScript object, which is then assigned to req.body.
 app.use(express.json());
@@ -25,7 +25,7 @@ app.use('/user', userRouter)
 
 connectToDB().then(() => {
     try {
-        app.listen(8000, () => {
+        app.listen(process.env.PORT, () => {
             console.log('server running at port 8000');
         })
     } catch (error) {
