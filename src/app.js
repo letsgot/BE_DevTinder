@@ -9,6 +9,8 @@ const { connectionRequestRouter } = require('./routes/connectionRequest');
 const { userRouter } = require('./routes/user');
 require('dotenv').config();
 
+require('./utils/cronForDailyEmail');
+
 // express.json() parses the incoming JSON payload and converts it into a JavaScript object, which is then assigned to req.body.
 app.use(express.json());
 app.use(cookieParser());
