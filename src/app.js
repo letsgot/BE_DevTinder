@@ -7,8 +7,10 @@ const { authRouter } = require("./routes/auth");
 const { profileRouter } = require("./routes/profile");
 const { connectionRequestRouter } = require('./routes/connectionRequest');
 const { userRouter } = require('./routes/user');
+const { createServer } = require("http");
+const httpServer = createServer(app);
+const socketInitialization = require('./utils/socket')
 require('dotenv').config();
-
 require('./utils/cronForDailyEmail');
 
 // express.json() parses the incoming JSON payload and converts it into a JavaScript object, which is then assigned to req.body.
@@ -20,6 +22,8 @@ app.use(cors({
     credentials: true               // ✅ if you're sending cookies or auth headers
 }));
 
+socketInitialization(httpServer);
+
 app.use('/auth', authRouter);
 app.use('/profile', profileRouter);
 app.use('/request', connectionRequestRouter)
@@ -27,7 +31,7 @@ app.use('/user', userRouter)
 
 connectToDB().then(() => {
     try {
-        app.listen(process.env.PORT, () => {
+        httpServer.listen(process.env.PORT, () => {
             console.log('server running at port 8000');
         })
     } catch (error) {
