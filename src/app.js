@@ -9,7 +9,8 @@ const { connectionRequestRouter } = require('./routes/connectionRequest');
 const { userRouter } = require('./routes/user');
 const { createServer } = require("http");
 const httpServer = createServer(app);
-const socketInitialization = require('./utils/socket')
+const socketInitialization = require('./utils/socket');
+const chatRouter = require('./routes/chat');
 require('dotenv').config();
 require('./utils/cronForDailyEmail');
 
@@ -28,6 +29,7 @@ app.use('/auth', authRouter);
 app.use('/profile', profileRouter);
 app.use('/request', connectionRequestRouter)
 app.use('/user', userRouter)
+app.use('/chat', chatRouter);
 
 connectToDB().then(() => {
     try {
